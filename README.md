@@ -1,6 +1,6 @@
 # **Captain Game**
 
-Welcome to Captain Game, an exciting adventure app developed using Kotlin, Jetpack Compose, and Android Studio. This project focuses on a basic yet immersive gaming experience where users explore three levels—easy, medium, and hard—navigating four directions in search of treasure.
+Welcome to Captain Game, an exciting adventure app developed using Kotlin, Jetpack Compose, and Android Studio. This project focuses on a basic yet immersive gaming experience where users explore three levels Easy, Medium, and Hard navigating four directions in search of treasure.
 
 **Features** 
 
