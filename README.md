@@ -4,9 +4,9 @@ Welcome to Captain Game, an exciting adventure app developed using Kotlin, Jetpa
 
 **Features** 
 
-1.Three Difficulty Levels: Choose from easy, medium, or hard.
-2.Four Directions: Navigate the ship in four directions seeking treasure.
-3.Risk and Reward: Encounter storms while seeking treasure, impacting the ship's health.
+1.  Three Difficulty Levels: Choose from easy, medium, or hard.
+2.  Four Directions: Navigate the ship in four directions seeking treasure.
+3.  Risk and Reward: Encounter storms while seeking treasure, impacting the ship's health.
 
 
 **How to Play**
