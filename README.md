@@ -16,6 +16,7 @@ Welcome to Captain Game, an exciting adventure app developed using Kotlin, Jetpa
 4.	Gameplay: Explore levels, sail in different directions, gather treasure, and beware of storms!
 
 **Future Plans**\
+\
 •	Enhance UI/UX with Simulation in Background
 
 *Thank you for checking out Captain Game! Sail away and enjoy the adventure! ⚓️🌟🎯🏴‍☠️🌊*
