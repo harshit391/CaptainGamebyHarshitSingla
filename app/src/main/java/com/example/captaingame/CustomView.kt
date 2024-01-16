@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 
 class CustomView : ViewModel() {
 
-    private val _repository : Repo = Repo();
+    private val _repository : Repo = Repo()
 
     private val _difficulty = mutableIntStateOf(_repository.getCaptainGameData().difficulty)
     private val _reset = mutableStateOf(_repository.getCaptainGameData().reset)
-    private val _difficult = mutableStateOf(_repository.getCaptainGameData().difficult);
+    private val _difficult = mutableStateOf(_repository.getCaptainGameData().difficult)
     private val _shipXP = mutableIntStateOf(_repository.getCaptainGameData().shipXP)
 
     private val _treasureFound = mutableIntStateOf(_repository.getCaptainGameData().treasureFound)
@@ -52,20 +52,11 @@ class CustomView : ViewModel() {
         _difficulty.intValue = _repository.getCaptainGameData().difficulty
     }
 
-    fun resetDifficulty() {
-        _repository.resetDifficulty()
-        _difficulty.intValue = _repository.getCaptainGameData().difficulty
-    }
-
     fun resetIt() {
         _repository.resetIt()
         _reset.value = _repository.getCaptainGameData().reset
     }
 
-    fun unResetIt() {
-        _repository.resetIt()
-        _reset.value = _repository.getCaptainGameData().reset
-    }
 
     fun setDifficult1() {
         _repository.setDifficult1()

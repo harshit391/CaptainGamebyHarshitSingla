@@ -56,21 +56,21 @@ class MainActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.Center,
             ) {
                 Button(
-                    onClick = {myView.setDifficulty1()}, modifier = Modifier
+                    onClick = {myView.setDifficulty1();myView.setDifficult1()}, modifier = Modifier
                         .fillMaxWidth()
                         .padding(32.dp)
                 ) {
                     Text("Easy")
                 }
                 Button(
-                    onClick = { myView.setDifficulty2() }, modifier = Modifier
+                    onClick = { myView.setDifficulty2();myView.setDifficult2()}, modifier = Modifier
                         .fillMaxWidth()
                         .padding(32.dp)
                 ) {
                     Text("Medium")
                 }
                 Button(
-                    onClick = { myView.setDifficulty3() }, modifier = Modifier
+                    onClick = { myView.setDifficulty3();myView.setDifficult3()}, modifier = Modifier
                         .fillMaxWidth()
                         .padding(32.dp)
                 ) {

@@ -32,16 +32,8 @@ class Repo{
         _start.difficulty = 3
     }
 
-    fun resetDifficulty() {
-        _start.difficulty = -1
-    }
-
     fun resetIt() {
         _start.reset = true
-    }
-
-    fun unResetIt() {
-        _start.reset = false
     }
 
     fun setDifficult1() {
