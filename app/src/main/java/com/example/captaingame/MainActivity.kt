@@ -18,11 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,10 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.captaingame.ui.theme.CaptainGameTheme
 import kotlin.random.Random
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,37 +40,37 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ChooseDifficulty(-1)
+                    val viewModelOfMine : CustomView = viewModel()
+                    ChooseDifficulty( viewModelOfMine)
                 }
             }
         }
     }
 
     @Composable
-    fun ChooseDifficulty(d: Int){
-        var difficulty by remember { mutableIntStateOf(d) }
-        if (difficulty == -1) {
+    fun ChooseDifficulty(myView: CustomView){
+        if (myView.difficultyPublic.value == -1) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
                 Button(
-                    onClick = {difficulty = 1}, modifier = Modifier
+                    onClick = {myView.setDifficulty1()}, modifier = Modifier
                         .fillMaxWidth()
                         .padding(32.dp)
                 ) {
                     Text("Easy")
                 }
                 Button(
-                    onClick = { difficulty = 2 }, modifier = Modifier
+                    onClick = { myView.setDifficulty2() }, modifier = Modifier
                         .fillMaxWidth()
                         .padding(32.dp)
                 ) {
                     Text("Medium")
                 }
                 Button(
-                    onClick = { difficulty = 3 }, modifier = Modifier
+                    onClick = { myView.setDifficulty3() }, modifier = Modifier
                         .fillMaxWidth()
                         .padding(32.dp)
                 ) {
@@ -81,173 +78,140 @@ class MainActivity : ComponentActivity() {
                 }
             }
         } else {
-            when (difficulty) {
-                1 -> CaptainGame(10000,500,1500)
-                2 -> CaptainGame(10000,2000,3000)
-                3 -> CaptainGame(10000,3500,4500)
+            when (myView.difficultyPublic.value) {
+                1 -> CaptainGame(myView,500,1500)
+                2 -> CaptainGame(myView,2000,3000)
+                3 -> CaptainGame(myView,3500,4500)
                 else -> {}
             }
         }
     }
 
     @Composable
-    fun Result(found: Int, diff: Int) {
-        var reset by remember {
-            mutableStateOf(false)
-        }
-
-        val myStyle = TextStyle(
-            fontSize = 40.sp,
-        )
-
-        var difficult by remember {
-            mutableStateOf("Easy")
-        }
-
-        if (diff == 2000) {
-            difficult = "Medium"
-        }
-
-        if (diff == 3500) {
-            difficult = "Hard"
-        }
-
-        if (!reset) {
+    fun Result(myView: CustomView) {
+        if (!myView.resetPublic.value) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black)
                     .padding(8.dp),
                 contentAlignment = Alignment.Center
+
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Game Over!\n Ship's health is critically low.",
+                        text = "Game Over!\n \n Ship's health is critically low.",
                         color = Color.White,
                         textAlign = TextAlign.Center,
-                        style = myStyle
+                        fontSize = 32.sp
                     )
                     Text(
                         modifier = Modifier.padding(vertical = 32.dp),
-                        text = "Game Difficulty :- $difficult",
+                        text = "Game Difficulty :- ${myView.difficultPublic.value}",
                         color = Color.Green,
                         textAlign = TextAlign.Center,
-                        style = myStyle
+                        fontSize = 32.sp
                     )
                     Text(
                         modifier = Modifier.padding(vertical = 32.dp),
-                        text = "Treasure Found: $found",
+                        text = "Treasure Found: ${myView.treasureFoundPublic.value}",
                         color = Color.Yellow,
                         textAlign = TextAlign.Center,
-                        style = myStyle
+                        fontSize = 32.sp
                     )
-                    Button(onClick = { reset = true }, modifier = Modifier.height(64.dp).width(120.dp)) {
+                    Button(onClick = { myView.resetIt() }, modifier = Modifier
+                        .height(64.dp)
+                        .width(120.dp)) {
                         Text("Reset", fontSize = 24.sp)
                     }
                 }
             }
         } else {
-            ChooseDifficulty(-1)
+            myView.resetEverything()
+            ChooseDifficulty(myView)
         }
     }
 
     @Composable
-    fun CaptainGame(xP: Int, fromRange: Int, toRange: Int) {
-        var shipXP by remember {
-            mutableIntStateOf(xP)
-        }
-
-        var treasuresFound by remember {
-            mutableIntStateOf(0)
-        }
-
-        val direction = remember {
-            mutableStateOf("North")
-        }
-
-        val stormOrTreasure = remember {
-            mutableStateOf("")
-        }
-
+    fun CaptainGame(myView: CustomView, fromRange: Int, toRange: Int) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            if (shipXP > 100) {
+            if (myView.shipXpPublic.value > 100) {
 
-                Text(text = "Treasures Found: $treasuresFound")
-                Text(text = "Current Direction: ${direction.value}")
-                Text(text = "Health of Ship :- $shipXP")
-                Text(text = stormOrTreasure.value)
+                Text(text = "Treasures Found: ${myView.treasureFoundPublic.value}")
+                Text(text = "Current Direction: ${myView.directionPublic.value}")
+                Text(text = "Health of Ship :- ${myView.shipXpPublic.value}")
+                Text(text = myView.stormOrTreasurePublic.value)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(onClick = {
-                    direction.value = "East"
+                    myView.setDirectionEast()
                     val generate = Random.nextInt(fromRange,toRange)
                     if (generate%2==0) {
-                        treasuresFound += 1
-                        stormOrTreasure.value = "Found a Treasure!"
+                        myView.foundTheTreasure()
+                        myView.treasure()
                     } else {
                         val destroyed = Random.nextInt(fromRange, toRange)
-                        shipXP -= destroyed
-                        stormOrTreasure.value = "Storm Ahead!"
+                        myView.decreaseShipXp(destroyed)
+                        myView.storm()
                     }
                 }) {
                     Text("Sail East")
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = {
-                    direction.value = "West"
+                    myView.setDirectionWest()
                     val generate = Random.nextInt(fromRange,toRange)
                     if (generate%2==0) {
-                        treasuresFound += 1
-                        stormOrTreasure.value = "Found a Treasure!"
+                        myView.foundTheTreasure()
+                        myView.treasure()
                     } else {
                         val destroyed = Random.nextInt(fromRange, toRange)
-                        shipXP -= destroyed
-                        stormOrTreasure.value = "Storm Ahead!"
+                        myView.decreaseShipXp(destroyed)
+                        myView.storm()
                     }
                 }) {
                     Text("Sail West")
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = {
-                    direction.value = "South"
+                    myView.setDirectionSouth()
                     val generate = Random.nextInt(fromRange,toRange)
                     if (generate%2==0) {
-                        treasuresFound += 1
-                        stormOrTreasure.value = "Found a Treasure!"
+                        myView.foundTheTreasure()
+                        myView.treasure()
                     } else {
                         val destroyed = Random.nextInt(fromRange, toRange)
-                        shipXP -= destroyed
-                        stormOrTreasure.value = "Storm Ahead!"
+                        myView.decreaseShipXp(destroyed)
+                        myView.storm()
                     }
                 }) {
                     Text("Sail South")
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = {
-                    direction.value = "North"
+                    myView.setDirectionNorth()
                     val generate = Random.nextInt(fromRange,toRange)
                     if (generate%2==0) {
-                        treasuresFound += 1
-                        stormOrTreasure.value = "Found a Treasure!"
+                        myView.foundTheTreasure()
+                        myView.treasure()
                     } else {
                         val destroyed = Random.nextInt(fromRange, toRange)
-                        shipXP -= destroyed
-                        stormOrTreasure.value = "Storm Ahead!"
+                        myView.decreaseShipXp(destroyed)
+                        myView.storm()
                     }
                 }) {
                     Text("Sail North")
                 }
             } else {
-                Result(treasuresFound,fromRange)
+                Result(myView)
             }
         }
     }
